@@ -1,6 +1,6 @@
 # WHAT'S THIS?
 This is a fork of offical [Nextcloud dockerfiles](https://github.com/nextcloud/docker).
-The aiming of this fork is to modify the upstreaming container image for a more cloud-native way.
+The purpose of this fork is to modify the upstreaming container image to a more cloud-native way.
 
 Comparing with the upstream container images, there are following differences:
 
