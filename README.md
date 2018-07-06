@@ -1,3 +1,16 @@
+# WHAT'S THIS?
+This is a fork of offical [Nextcloud dockerfiles](https://github.com/nextcloud/docker).
+The aiming of this fork is to modify the upstreaming container image for a more cloud-native way.
+
+Comparing with the upstream container images, there are following differences:
+
+1. Nextcloud files (`/var/www/html`) is not on a volume.
+2. Upgrade procedure is not run automatically when a container starts.
+3. Support running as non-root and any UID (compatible with OpenShift).
+
+For more information, check out <https://github.com/nextcloud/docker/issues/381>.
+
+
 # What is Nextcloud?
 
 [![Build Status update.sh](https://doi-janky.infosiftr.net/job/update.sh/job/nextcloud/badge/icon)](https://doi-janky.infosiftr.net/job/update.sh/job/nextcloud)
