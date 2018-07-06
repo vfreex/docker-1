@@ -92,7 +92,6 @@ RUN { \
     chown -R www-data:root /var/www; \
     chmod -R g=u /var/www
 
-VOLUME /var/www/html
 
 
 ENV NEXTCLOUD_VERSION 13.0.4
@@ -110,22 +109,40 @@ RUN set -ex; \
     curl -fsSL -o nextcloud.tar.bz2.asc \
         "https://download.nextcloud.com/server/releases/nextcloud-${NEXTCLOUD_VERSION}.tar.bz2.asc"; \
     export GNUPGHOME="$(mktemp -d)"; \
-# gpg key from https://nextcloud.com/nextcloud.asc
+    # gpg key from https://nextcloud.com/nextcloud.asc
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 28806A878AE423A28372792ED75899B9A724937A; \
     gpg --batch --verify nextcloud.tar.bz2.asc nextcloud.tar.bz2; \
-    tar -xjf nextcloud.tar.bz2 -C /usr/src/; \
+    tar -xjf nextcloud.tar.bz2 -C /var/www/html --strip-components=1; \
     gpgconf --kill all; \
     rm -r "$GNUPGHOME" nextcloud.tar.bz2.asc nextcloud.tar.bz2; \
-    rm -rf /usr/src/nextcloud/updater; \
-    mkdir -p /usr/src/nextcloud/data; \
-    mkdir -p /usr/src/nextcloud/custom_apps; \
-    chmod +x /usr/src/nextcloud/occ; \
+    mkdir -p /var/www/html/data \
+        /var/www/html/custom_apps \
+        /var/www/html/config \
+        /var/www/html/themes; \
+    rm -rf /var/www/html/updater; \
+    chown -R www-data:root /var/www/html; \
+    chmod -R ug-w,o= /var/www/html; \
+    chmod ug+x /var/www/html/occ; \
+    chmod ug+w /var/www/html/data \
+        /var/www/html/custom_apps \
+        /var/www/html/config \
+        /var/www/html/themes \
+        /var/www/html/.htaccess \
+        /var/www/html/.user.ini; \
     \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $fetchDeps; \
     rm -rf /var/lib/apt/lists/*
 
 COPY *.sh /
-COPY config/* /usr/src/nextcloud/config/
+COPY config/* /var/www/html/config/
 
+# Allow the container to be run as random UIDs (for compatibility with OpenShift).
+RUN chgrp root /etc/passwd && chmod g+w /etc/passwd
+
+VOLUME /var/www/html/data \
+    /var/www/html/custom_apps \
+    /var/www/html/config \
+    /var/www/html/themes
+USER www-data:root
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
