@@ -1,6 +1,8 @@
+# Deprecated, go to https://github.com/vfreex/kube-nextcloud !
+
 # WHAT'S THIS?
-This is a fork of offical [Nextcloud dockerfiles](https://github.com/nextcloud/docker).
-The purpose of this fork is to modify the upstreaming container image to a more cloud-native way.
+This is a fork of official [Nextcloud dockerfiles](https://github.com/nextcloud/docker).
+The purpose of this fork is to modify the upstream container image to a more cloud-native way.
 
 Comparing with the upstream container images, there are following differences:
 
